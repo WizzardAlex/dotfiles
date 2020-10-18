@@ -1,6 +1,7 @@
 [user]
 	email = florean.alexander@gmail.com
-	name = WizzardAlex
+  user = alexflor100
+  name = Alexander Florean
 
 [alias]
   co = checkout
@@ -10,3 +11,8 @@
   hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
   type = cat-file -t
   dump = cat-file -p
+[credential]
+	helper = cache --timeout=43200
+
+[branch]
+    sort=-committerdate

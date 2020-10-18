@@ -1,5 +1,3 @@
-
-
 " Pulgin's  ====================================================================
 
 
@@ -16,6 +14,16 @@ Plug 'vimwiki/vimwiki', { 'branch' : 'dev'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() },
       \ 'for': ['markdown', 'vim-plug']}
 
+" Vim Plugin for Lively Previewing LaTeX PDF Output
+"Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
+
+Plug 'lervag/vimtex'
+Plug 'sirver/ultisnips'
+
+Plug 'ycm-core/YouCompleteMe'
+Plug 'vim-syntastic/syntastic'
+Plug 'morhetz/gruvbox'
+
 call plug#end()
 
 " Settings ==================================================================
@@ -27,7 +35,7 @@ syntax on			" turn on syntax highlighting
 set hidden			" allows reuse the same window
 set encoding=utf-8		" set encoding
 set autoindent
-set shiftwidth=2		" Number of autoindent spaces
+set shiftwidth=4		" Number of autoindent spaces
 set smartindent
 set smarttab
 set breakindent			" indent line wraps
@@ -56,13 +64,19 @@ set noerrorbells		" turns of the beep
 set backspace=indent,eol,start	" allows backspace over autoindent etc
 set ttyfast                     " speeds up scrolling
 
-set updatetime=300              " default 4000 ms = 4 s, is noticeable
+set updatetime=100              " default 4000 ms = 4 s, is noticeable
 set cursorline                  " highlights the cursorline
 set t_Co=256			" for the colorscheme Zenburn
-colors zenburn
+"colors zenburn
 
 " removes white space at boot, for c and python files
 autocmd FileType python,c autocmd BufWritePre <buffer> %s/\s\+$//e
+
+" Theme  ====================================================================
+
+"colors zenburn
+colors gruvbox
+set background=dark
 
 " Keybindings ===============================================================
 
@@ -73,6 +87,7 @@ map <F9> :! ./%<  <CR>
 map Y y$			
 let mapleader = ","
 
+setlocal foldmethod=manual
 
 " *** Spell Checking ***
 
@@ -111,7 +126,7 @@ let g:vimwiki_list = [{
   \ }]
 
 "autocmd FileType markdown set ft=markdown
-autocmd FileType vimwiki set colorcolumn=0
+"autocmd FileType vimwiki set colorcolumn=0
 
 " Transform to html keyBindings
 nmap <silent> <leader>wb :Vimwiki2HTMLBrowse<CR>
@@ -135,3 +150,31 @@ let g:mkdp_preview_options = {
 
 nmap <leader>p <Plug>MarkdownPreview
 
+" Vim-Tex ==================================================================
+
+let g:tex_flavor='latex'
+let g:vimtex_view_method='zathura'
+let g:vimtex_quickfix_mode=0
+set conceallevel=1
+let g:tex_conceal='abdmg'
+
+" Snippets =================================================================
+
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+
+" LaTeX-Preview ============================================================
+
+"let g:livepreview_use_biber=1
+
+" Syntastic ================================================================
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" YouCompleteMe  ============================================================
+
+let g:ycm_show_diagnostics_ui = 0       " Lets syntastic checkers run with YCM

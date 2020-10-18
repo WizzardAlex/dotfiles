@@ -1,0 +1,5 @@
+ln -fs ~/dotfiles/bash/.bashrc          ~/.bashrc
+ln -fs ~/dotfiles/vim/.vimrc            ~/.vim
+ln -fs ~/dotfiles/git/.gitconfig        ~/.gitconfig
+
+
