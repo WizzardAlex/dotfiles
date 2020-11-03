@@ -5,7 +5,7 @@
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs 
   \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  au VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 call plug#begin('~/.vim/plugins')
@@ -16,6 +16,8 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() },
 
 " Vim Plugin for Lively Previewing LaTeX PDF Output
 "Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
+
+"TODO FIXA NERDTREE?
 
 Plug 'lervag/vimtex'
 Plug 'sirver/ultisnips'
@@ -70,7 +72,7 @@ set t_Co=256			" for the colorscheme Zenburn
 "colors zenburn
 
 " removes white space at boot, for c and python files
-autocmd FileType python,c autocmd BufWritePre <buffer> %s/\s\+$//e
+au FileType python,c au BufWritePre <buffer> %s/\s\+$//e
 
 " Theme  ====================================================================
 
@@ -81,7 +83,7 @@ set background=dark
 " Keybindings ===============================================================
 
 set pastetoggle=<F2>		" toggle between 'paste' and 'nopaste'
-map <F8> :! gcc -Wall -o %< % <CR>
+map <F8> :make <CR>
 map <F9> :! ./%<  <CR>
 				" acts like 'D' and 'C' instead of 'yy'
 map Y y$			
@@ -125,8 +127,8 @@ let g:vimwiki_list = [{
   \ 'ext': '.md' 
   \ }]
 
-"autocmd FileType markdown set ft=markdown
-"autocmd FileType vimwiki set colorcolumn=0
+"au FileType markdown set ft=markdown
+"au FileType vimwiki set colorcolumn=0
 
 " Transform to html keyBindings
 nmap <silent> <leader>wb :Vimwiki2HTMLBrowse<CR>
@@ -174,6 +176,9 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+au FileType tex let g:syntastic_auto_loc_list = 0
+au FileType tex let g:syntastic_check_on_open  = 0
 
 " YouCompleteMe  ============================================================
 

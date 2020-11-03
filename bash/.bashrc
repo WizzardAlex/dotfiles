@@ -3,9 +3,9 @@ export EDITOR='vim'
 #Include stuff
 source ~/dotfiles/bash/.bash_aliases
 
-if [ -f ~/dotfiles/bash/.bashrc ]; then
-    source ~/dotfiles/bash/.bashrc
-fi
+#if [ -f ~/dotfiles/bash/.bashrc ]; then
+#    source ~/dotfiles/bash/.bashrc
+#fi
 
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
