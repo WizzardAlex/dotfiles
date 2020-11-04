@@ -4,6 +4,5 @@ ln -fs ~/dotfiles/git/.gitconfig        ~/.gitconfig
 ln -fs ~/dotfiles/keymapping/.Xmodmap   ~/.Xmodmap
 
 
-cp ~/dotfiles/vim/autoload              ~/.vim/
 
 
