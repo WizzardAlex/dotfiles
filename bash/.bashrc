@@ -1,4 +1,13 @@
 export EDITOR='vim'
+export TERM="xterm-256color"
+
+# sets vim as manpager
+export MANPAGER="/bin/sh -c \"col -b | vim --not-a-term -c 'set ft=man ts=8 nomod nolist noma' -\""
+
+### SET VI MODE IN BASH SHELL
+set -o vi
+bind -m vi-command 'Control-l: clear-screen'
+bind -m vi-insert 'Control-l: clear-screen'
 
 #Include stuff
 source ~/dotfiles/bash/.bash_aliases

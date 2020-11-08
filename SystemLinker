@@ -2,7 +2,7 @@ ln -fs ~/dotfiles/bash/.bashrc          ~/.bashrc
 ln -fs ~/dotfiles/vim/.vimrc            ~/.vimrc
 ln -fs ~/dotfiles/git/.gitconfig        ~/.gitconfig
 ln -fs ~/dotfiles/keymapping/.Xmodmap   ~/.Xmodmap
-
+ln -fs ~/dotfiles/awesome/rc.lua        ~/.config/awesome/rc.lua
 
 
 
