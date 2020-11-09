@@ -650,5 +650,5 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 -- autostart applications
 awful.spawn.with_shell("sudo tlp start")
-awful.spawn.with_shell("compton")
+-- awful.spawn.with_shell("compton")
 awful.spawn.with_shell("nitrogen --restore")
