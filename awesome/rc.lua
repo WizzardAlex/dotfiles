@@ -364,25 +364,32 @@ globalkeys = gears.table.join(
     --awful.key({ modkey1 }, "Up",
     awful.key({ }, "XF86AudioRaiseVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
-            beautiful.volume.update()
+            local raiseVolume = "amixer -q set Master 5%+"
+            os.execute(raiseVolume)
+            --os.execute(string.format("amixer -q set Master 1%+",beautiful.volume.channel))
+            --beautiful.volume.update()
         end,
       {description = "Higher sound", group = "hotkeys"}),
     --awful.key({ modkey1 }, "Down",
     awful.key({ }, "XF86AudioLowerVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
-            beautiful.volume.update()
+            local lowerVolume = "amixer -q set Master 5%-"
+            os.execute(lowerVolume)
+            --TODO: some kind of ui when lowering the volume
+            --os.execute(string.format("amixer -q set Master 1%-", beautiful.volume.channel))
+            --beautiful.volume.update()
         end,
       {description = "Lowers sound", group = "hotkeys"}),
     awful.key({ }, "XF86AudioMute",
         function ()
-            os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
-            beautiful.volume.update()
+            local muteVolume = "amixer -q set Master toggle"
+            os.execute(muteVolume)
+            --os.execute(string.format("amixer -q set Master toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
+            --beautiful.volume.update()
         end,
       {description = "Mutes sound", group = "hotkeys"}),
 
-    -- Brightness
+    -- TODO:Brightness
     awful.key({ }, "XF86MonBrightnessUp", function () os.execute("xbacklight -inc 10") end,
               {description = "Brightness +10%", group = "hotkeys"}),
     awful.key({ }, "XF86MonBrightnessDown", function () os.execute("xbacklight -dec 10") end,
@@ -393,7 +400,7 @@ globalkeys = gears.table.join(
               -- {description = "Suspends system", group = "hotkeys"})
 
               --TODO: lägg in rätt knapp, fn+f3
-    awful.key({ }, "XF86Sleep", function () 
+    awful.key({ }, "XF86TouchpadToggle", function () 
                                 local command = "xinput --list-props 14 | grep 'Device Enabled'"
                                 local pipe = io.popen(command)
                                 local output = pipe:read("*a")
