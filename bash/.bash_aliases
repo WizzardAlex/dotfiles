@@ -1,4 +1,4 @@
-alias dotfiles='cd ~/dotfiles/'
+alias dotfiles='~/dotfiles/'
 
 alias ll='ls -alF'
 alias la='ls -A'

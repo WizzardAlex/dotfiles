@@ -193,7 +193,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.util.tagnames = {" SYS ", " WWW ", " DOC ", " CHAT ", " MUS ", " VID ", " DEV ", " MISC1 ", " MISC2 "}
+    awful.util.tagnames = {" 1:SYS ", " 2:WWW ", " 3:DOC ", " 4:CHAT ", " 5:MUS ", " 6:VID ", " 7:DEV ", " 8:MISC1 ", " 9:MISC2 "}
     awful.tag(awful.util.tagnames,s,awful.layout.layouts[1])
     
 
@@ -425,7 +425,7 @@ clientkeys = gears.table.join(
             c:raise()
         end,
         {description = "toggle fullscreen", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end,
+    awful.key({ modkey,           }, "c",      function (c) c:kill()                         end,
               {description = "close", group = "client"}),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
               {description = "toggle floating", group = "client"}),
@@ -659,9 +659,9 @@ autorunApps =
 {
     "nitrogen --restore",
 --    "psensor",
-    "bash dotfiles/scripts/.screenlayouts/home.sh",
-    "bash dotfiles/scripts/swap-caps_lock-escape.sh"
-
+    "bash dotfiles/scripts/.screenlayout/home.sh",
+    "bash dotfiles/scripts/swap-caps_lock-escape.sh",
+    "xinput disable 14"
 }
 if autorun then
     for app=1, #autorunApps do
