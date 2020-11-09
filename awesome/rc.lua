@@ -6,14 +6,18 @@ pcall(require, "luarocks.loader")
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
+
 -- Widget and layout library
 local wibox = require("wibox")
+
 -- Theme handling library
 local beautiful = require("beautiful")
+
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
+
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -45,9 +49,15 @@ do
         in_error = false
     end)
 end
--- }}}
 
--- {{{ Variable definitions
+-- Variables
+local altkey = "Mod1"
+local modkey = "Mod4"
+
+-- Personal Variables
+local browser           = "firefox"
+
+
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
@@ -56,28 +66,25 @@ terminal = "x-terminal-emulator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
 
--- Default modkey.
--- Usually, Mod4 is the key with a logo between Control and Alt.
--- If you do not like this or do not have such a key,
--- I suggest you to remap Mod4 to another key using xmodmap or other tools.
--- However, you can use another modifier like Mod1, but it may interact with others.
-modkey = "Mod4"
 
+awful.util.terminal = terminal
+
+awful.util.tagnames = {" SYS ", " WWW ", " DOC ", " CHAT ", " MUS ", " VID ", " DEV ", " MISC1 ", " MISC2 "}
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-    awful.layout.suit.floating,
     awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
-    awful.layout.suit.tile.bottom,
-    awful.layout.suit.tile.top,
-    awful.layout.suit.fair,
-    awful.layout.suit.fair.horizontal,
+    awful.layout.suit.floating,
+    -- awful.layout.suit.tile.left,
+    -- awful.layout.suit.tile.bottom,
+    -- awful.layout.suit.tile.top,
+    -- awful.layout.suit.fair,
+    -- awful.layout.suit.fair.horizontal,
     awful.layout.suit.spiral,
-    awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
+    -- awful.layout.suit.spiral.dwindle,
+    -- awful.layout.suit.max,
     awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier,
-    awful.layout.suit.corner.nw,
+    -- awful.layout.suit.corner.nw,
     -- awful.layout.suit.corner.ne,
     -- awful.layout.suit.corner.sw,
     -- awful.layout.suit.corner.se,
@@ -350,7 +357,58 @@ globalkeys = gears.table.join(
               {description = "lua execute prompt", group = "awesome"}),
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end,
-              {description = "show the menubar", group = "launcher"})
+              {description = "show the menubar", group = "launcher"}),
+
+-- TODO: FIXA fn knapparna, ingen funkar än så länge
+     -- ALSA volume control
+    --awful.key({ modkey1 }, "Up",
+    awful.key({ }, "XF86AudioRaiseVolume",
+        function ()
+            os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
+            beautiful.volume.update()
+        end,
+      {description = "Higher sound", group = "hotkeys"}),
+    --awful.key({ modkey1 }, "Down",
+    awful.key({ }, "XF86AudioLowerVolume",
+        function ()
+            os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
+            beautiful.volume.update()
+        end,
+      {description = "Lowers sound", group = "hotkeys"}),
+    awful.key({ }, "XF86AudioMute",
+        function ()
+            os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
+            beautiful.volume.update()
+        end,
+      {description = "Mutes sound", group = "hotkeys"}),
+
+    -- Brightness
+    awful.key({ }, "XF86MonBrightnessUp", function () os.execute("xbacklight -inc 10") end,
+              {description = "Brightness +10%", group = "hotkeys"}),
+    awful.key({ }, "XF86MonBrightnessDown", function () os.execute("xbacklight -dec 10") end,
+              {description = "Brightness -10%", group = "hotkeys"}),
+
+    -- Sleep
+--    awful.key({ }, "XF86Sleep", function () os.execute("systemctl suspend") end,
+              -- {description = "Suspends system", group = "hotkeys"})
+
+              --TODO: lägg in rätt knapp, fn+f3
+    awful.key({ }, "XF86Sleep", function () 
+                                local command = "xinput --list-props 14 | grep 'Device Enabled'"
+                                local pipe = io.popen(command)
+                                local output = pipe:read("*a")
+                                local result = string.sub(output,-2)
+                                if(result == "0\n") then
+                                    os.execute("xinput enable 14")
+                                    else if(result == "1\n") then
+                                        os.execute("xinput disable 14")
+                                    end
+                                end
+                                end,
+               {description = "Toggles touchpad On/Off", group = "hotkeys"})
+
+
+
 )
 
 clientkeys = gears.table.join(
@@ -591,7 +649,6 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 
 -- autostart applications
-awful.spawn.with_shell("tlp")
-awful.spawn.with_shell("psensor")
+awful.spawn.with_shell("sudo tlp start")
 awful.spawn.with_shell("compton")
 awful.spawn.with_shell("nitrogen --restore")

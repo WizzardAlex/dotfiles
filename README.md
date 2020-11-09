@@ -10,7 +10,5 @@
 - telegram
 - zathura
 - tlp
-- window tiling program
-- tmux
 
 Run ./SystemLinker when installing on a new system

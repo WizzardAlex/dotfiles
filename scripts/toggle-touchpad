@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# NAME: toggle-touchpad
+# PATH: /home/$USER/bin
+# DESC: Toggles the touchpad on/off
+# CALL: called from Keyboard Shortcut "fn" + "f3"
+# DATE: Created sön 8 nov 2020
+
+# Use device number matching touchpad, in this case 14
+if [[ $(xinput list 14 | grep -Ec "disabled") -eq 1 ]]; then
+    xinput enable 14
+else
+    xinput disable 14
+fi
+
+exit 0
+
