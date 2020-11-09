@@ -69,21 +69,20 @@ editor_cmd = terminal .. " -e " .. editor
 
 awful.util.terminal = terminal
 
-awful.util.tagnames = {" SYS ", " WWW ", " DOC ", " CHAT ", " MUS ", " VID ", " DEV ", " MISC1 ", " MISC2 "}
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.tile,
-    awful.layout.suit.floating,
+    -- awful.layout.suit.floating,
     -- awful.layout.suit.tile.left,
-    -- awful.layout.suit.tile.bottom,
+    awful.layout.suit.tile.bottom,
     -- awful.layout.suit.tile.top,
     -- awful.layout.suit.fair,
     -- awful.layout.suit.fair.horizontal,
-    awful.layout.suit.spiral,
+    -- awful.layout.suit.spiral,
     -- awful.layout.suit.spiral.dwindle,
     -- awful.layout.suit.max,
     awful.layout.suit.max.fullscreen,
-    awful.layout.suit.magnifier,
+    -- awful.layout.suit.magnifier,
     -- awful.layout.suit.corner.nw,
     -- awful.layout.suit.corner.ne,
     -- awful.layout.suit.corner.sw,
@@ -110,7 +109,7 @@ if has_fdo then
         after =  { menu_terminal }
     })
 else
-    mymainmenu = awful.menu({
+   mymainmenu = awful.menu({
         items = {
                   menu_awesome,
                   { "Debian", debian.menu.Debian_menu.Debian },
@@ -194,7 +193,9 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+    awful.util.tagnames = {" SYS ", " WWW ", " DOC ", " CHAT ", " MUS ", " VID ", " DEV ", " MISC1 ", " MISC2 "}
+    awful.tag(awful.util.tagnames,s,awful.layout.layouts[1])
+    
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -220,8 +221,8 @@ awful.screen.connect_for_each_screen(function(s)
         buttons = tasklist_buttons
     }
 
-    -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s })
+    -- Create the wibox "toolbar"
+    s.mywibox = awful.wibar({ position = "bottom", screen = s })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -359,7 +360,6 @@ globalkeys = gears.table.join(
     awful.key({ modkey }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"}),
 
--- TODO: FIXA fn knapparna, ingen funkar än så länge
      -- ALSA volume control
     --awful.key({ modkey1 }, "Up",
     awful.key({ }, "XF86AudioRaiseVolume",
@@ -395,11 +395,11 @@ globalkeys = gears.table.join(
     awful.key({ }, "XF86MonBrightnessDown", function () os.execute("xbacklight -dec 10") end,
               {description = "Brightness -10%", group = "hotkeys"}),
 
-    -- Sleep
+    -- TODO:Sleep
 --    awful.key({ }, "XF86Sleep", function () os.execute("systemctl suspend") end,
               -- {description = "Suspends system", group = "hotkeys"})
 
-              --TODO: lägg in rätt knapp, fn+f3
+              --TODO: io.popen är inte ideelt, behöver ngn sorts asynkron metod
     awful.key({ }, "XF86TouchpadToggle", function () 
                                 local command = "xinput --list-props 14 | grep 'Device Enabled'"
                                 local pipe = io.popen(command)
@@ -579,7 +579,7 @@ awful.rules.rules = {
 
     -- Add titlebars to normal clients and dialogs
     { rule_any = {type = { "normal", "dialog" }
-      }, properties = { titlebars_enabled = true }
+      }, properties = { titlebars_enabled = false }
     },
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
@@ -617,6 +617,7 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
+    -- TODO: fix Titlebar/TopBar
     awful.titlebar(c) : setup {
         { -- Left
             awful.titlebar.widget.iconwidget(c),
@@ -652,10 +653,25 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
+-- Autorun programs
+local autorun = true
+autorunApps =
+{
+    "nitrogen --restore",
+--    "psensor",
+    "bash dotfiles/scripts/.screenlayouts/home.sh",
+    "bash dotfiles/scripts/swap-caps_lock-escape.sh"
+
+}
+if autorun then
+    for app=1, #autorunApps do
+        awful.spawn.easy_async_with_shell(autorunApps[app])
+    end
+end
 
 
 
 -- autostart applications
-awful.spawn.with_shell("sudo tlp start")
--- awful.spawn.with_shell("compton")
-awful.spawn.with_shell("nitrogen --restore")
+--awful.spawn.with_shell("nitrogen --restore")
+--awful.spawn.with_shell("sudo tlp start")
+--awful.spawn.with_shell("compton")
