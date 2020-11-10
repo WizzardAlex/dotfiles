@@ -58,13 +58,12 @@ local modkey = "Mod4"
 local browser           = "firefox"
 local filemanager       = "ranger"
 local editor            = os.getenv("EDITOR") or "editor"
+local terminal          = os.getenv("TERMINAL") or "x-terminal-emulator"
+local editor_cmd        = terminal .. " -e " .. editor
 
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
--- This is used later as the default terminal and editor to run.
-terminal = "x-terminal-emulator"
-editor_cmd = terminal .. " -e " .. editor
 
 
 awful.util.terminal = terminal
@@ -72,7 +71,6 @@ awful.util.terminal = terminal
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.tile,
-    -- awful.layout.suit.floating,
     -- awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
     -- awful.layout.suit.tile.top,
@@ -82,6 +80,7 @@ awful.layout.layouts = {
     -- awful.layout.suit.spiral.dwindle,
     -- awful.layout.suit.max,
     awful.layout.suit.max.fullscreen,
+    awful.layout.suit.floating,
     -- awful.layout.suit.magnifier,
     -- awful.layout.suit.corner.nw,
     -- awful.layout.suit.corner.ne,
@@ -190,7 +189,10 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
-    set_wallpaper(s)
+    --set_wallpaper(s)
+    awful.spawn.easy_async_with_shell("nitrogen --restore")
+
+
 
     -- Each screen has its own tag table.
     awful.util.tagnames = {" 1:SYS ", " 2:WWW ", " 3:DOC ", " 4:CHAT ", " 5:MUS ", " 6:VID ", " 7:DEV ", " 8:MISC1 ", " 9:MISC2 "}
@@ -409,8 +411,8 @@ globalkeys = gears.table.join(
               {description = "Brightness -10%", group = "hotkeys"}),
 
     -- TODO:Sleep
---    awful.key({ }, "XF86Sleep", function () os.execute("systemctl suspend") end,
-              -- {description = "Suspends system", group = "hotkeys"})
+    awful.key({ }, "XF86Sleep", function () os.execute("systemctl suspend") end,
+              {description = "System Sleep", group = "hotkeys"}),
 
               --TODO: io.popen är inte ideelt, behöver ngn sorts asynkron metod
     -- toggle on/off touchpad
@@ -631,7 +633,6 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    -- TODO: fix Titlebar/TopBar
     awful.titlebar(c) : setup {
         { -- Left
             awful.titlebar.widget.iconwidget(c),
@@ -671,11 +672,13 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 local autorun = true
 autorunApps =
 {
---    "psensor",
+    -- "psensor",
     "bash dotfiles/scripts/.screenlayout/home.sh",
     "nitrogen --restore",
     "bash dotfiles/scripts/swap-caps_lock-escape.sh",
+    --"redshift",
     "xinput disable 14"
+
 }
 if autorun then
     for app=1, #autorunApps do

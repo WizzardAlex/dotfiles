@@ -1,5 +1,6 @@
 export EDITOR='vim'
 export TERM="xterm-256color"
+export TERMINAL="x-terminal-emulator"
 
 # sets vim as manpager
 export MANPAGER="/bin/sh -c \"col -b | vim --not-a-term -c 'set ft=man ts=8 nomod nolist noma' -\""
