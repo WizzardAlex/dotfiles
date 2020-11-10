@@ -1,12 +1,14 @@
+#config files
 alias dotfiles='~/dotfiles/'
 
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
-alias  cp='cp -i' # paranoia
-alias  mv='mv -i' # paranoia
-alias  rm='rm -i' # paranoia
+# confirm before overwriting something
+alias  cp='cp -i' 
+alias  mv='mv -i'
+alias  rm='rm -i'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert

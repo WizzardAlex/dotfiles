@@ -56,14 +56,14 @@ local modkey = "Mod4"
 
 -- Personal Variables
 local browser           = "firefox"
-
+local filemanager       = "ranger"
+local editor            = os.getenv("EDITOR") or "editor"
 
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
-editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
 
 
@@ -251,9 +251,8 @@ root.buttons(gears.table.join(
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
 ))
--- }}}
 
--- {{{ Key bindings
+--================================ Key bindings ==============================--
 globalkeys = gears.table.join(
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
@@ -340,11 +339,6 @@ globalkeys = gears.table.join(
     awful.key({ modkey },            "r",     function () 
     awful.util.spawn("dmenu_run") end,
         {description = "Run the dmenu", group = "launcher"}),
-    -- firefox
-    awful.key({ modkey },            "b",     function () 
-    awful.util.spawn("firefox") end,
-        {description = "Run Mozilla Firefox", group = "applications"}),
-
 
     awful.key({ modkey }, "x",
               function ()
@@ -360,8 +354,25 @@ globalkeys = gears.table.join(
     awful.key({ modkey }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"}),
 
-     -- ALSA volume control
-    --awful.key({ modkey1 }, "Up",
+---------------------------------- APPLICATIONS --------------------------------
+
+     -- browser
+    awful.key({ modkey }, "b", function () awful.util.spawn(browser) end,
+        {description = "open internet browser", group = "applications"}),
+
+    --TODO: filemanager
+    awful.key({ modkey }, "v", 
+    function () 
+        awful.spawn(terminal .. " -e ".. filemanager) 
+    end,
+              {description = "open filemanager", group = "applications"}),
+
+
+
+---------------------------------- HOTKEYES ------------------------------------
+-- Volume control
+----TODO: some kind of ui when changing the volume
+    -- increase volume
     awful.key({ }, "XF86AudioRaiseVolume",
         function ()
             local raiseVolume = "amixer -q set Master 5%+"
@@ -369,17 +380,19 @@ globalkeys = gears.table.join(
             --os.execute(string.format("amixer -q set Master 1%+",beautiful.volume.channel))
             --beautiful.volume.update()
         end,
-      {description = "Higher sound", group = "hotkeys"}),
-    --awful.key({ modkey1 }, "Down",
+      {description = "Increases Volume", group = "hotkeys"}),
+    
+    -- decrease volume
     awful.key({ }, "XF86AudioLowerVolume",
         function ()
             local lowerVolume = "amixer -q set Master 5%-"
             os.execute(lowerVolume)
-            --TODO: some kind of ui when lowering the volume
             --os.execute(string.format("amixer -q set Master 1%-", beautiful.volume.channel))
             --beautiful.volume.update()
         end,
-      {description = "Lowers sound", group = "hotkeys"}),
+      {description = "Decreases Volume", group = "hotkeys"}),
+
+    -- mute volume
     awful.key({ }, "XF86AudioMute",
         function ()
             local muteVolume = "amixer -q set Master toggle"
@@ -400,6 +413,7 @@ globalkeys = gears.table.join(
               -- {description = "Suspends system", group = "hotkeys"})
 
               --TODO: io.popen är inte ideelt, behöver ngn sorts asynkron metod
+    -- toggle on/off touchpad
     awful.key({ }, "XF86TouchpadToggle", function () 
                                 local command = "xinput --list-props 14 | grep 'Device Enabled'"
                                 local pipe = io.popen(command)
@@ -657,9 +671,9 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 local autorun = true
 autorunApps =
 {
-    "nitrogen --restore",
 --    "psensor",
     "bash dotfiles/scripts/.screenlayout/home.sh",
+    "nitrogen --restore",
     "bash dotfiles/scripts/swap-caps_lock-escape.sh",
     "xinput disable 14"
 }
