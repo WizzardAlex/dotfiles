@@ -689,6 +689,5 @@ end
 
 
 -- autostart applications
---awful.spawn.with_shell("nitrogen --restore")
 --awful.spawn.with_shell("sudo tlp start")
 --awful.spawn.with_shell("compton")
