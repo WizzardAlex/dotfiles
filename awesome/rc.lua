@@ -362,7 +362,7 @@ globalkeys = gears.table.join(
     awful.key({ modkey }, "b", function () awful.util.spawn(browser) end,
         {description = "open internet browser", group = "applications"}),
 
-    --TODO: filemanager
+    -- filemanager
     awful.key({ modkey }, "v", 
     function () 
         awful.spawn(terminal .. " -e ".. filemanager) 
@@ -413,6 +413,8 @@ globalkeys = gears.table.join(
     -- TODO:Sleep
     awful.key({ }, "XF86Sleep", function () os.execute("systemctl suspend") end,
               {description = "System Sleep", group = "hotkeys"}),
+
+    -- TODO: LogOut, också implementera automatisk utloggning
 
               --TODO: io.popen är inte ideelt, behöver ngn sorts asynkron metod
     -- toggle on/off touchpad
@@ -672,11 +674,11 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 local autorun = true
 autorunApps =
 {
-    -- "psensor",
+    -- "psensor", hitta deamon alternativ???
     "bash dotfiles/scripts/.screenlayout/home.sh",
     "nitrogen --restore",
     "bash dotfiles/scripts/swap-caps_lock-escape.sh",
-    --"redshift",
+    "redshift-gtk",
     "xinput disable 14"
 
 }
@@ -685,9 +687,3 @@ if autorun then
         awful.spawn.easy_async_with_shell(autorunApps[app])
     end
 end
-
-
-
--- autostart applications
---awful.spawn.with_shell("sudo tlp start")
---awful.spawn.with_shell("compton")
