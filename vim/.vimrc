@@ -84,7 +84,8 @@ set background=dark
 
 set pastetoggle=<F2>		" toggle between 'paste' and 'nopaste'
 map <F8> :make <CR>
-map <F9> :! ./%<  <CR>
+au FileType c map <F9> :! ./%<  <CR>
+au FileType python map <F9> :w <CR> :! python3 %  <CR>
 				" acts like 'D' and 'C' instead of 'yy'
 map Y y$			
 let mapleader = ","
