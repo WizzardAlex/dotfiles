@@ -18,6 +18,9 @@ local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
 
+-- Battery Widget
+local batteryarc_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
+
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -224,7 +227,7 @@ awful.screen.connect_for_each_screen(function(s)
     }
 
     -- Create the wibox "toolbar"
-    s.mywibox = awful.wibar({ position = "bottom", screen = s })
+    s.mywibox = awful.wibar({ position = "top", screen = s })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -241,6 +244,11 @@ awful.screen.connect_for_each_screen(function(s)
             mykeyboardlayout,
             wibox.widget.systray(),
             mytextclock,
+            batteryarc_widget({
+                show_current_level = true,
+                arc_thickness = 3,
+                size = 20,
+            }),
             s.mylayoutbox,
         },
     }

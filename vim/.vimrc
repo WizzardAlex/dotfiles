@@ -93,18 +93,21 @@ let mapleader = ","
 setlocal foldmethod=manual
 
 " *** Spell Checking ***
-
+" zg = 'adds the selected word to the dictionary' , zw = 'marks words as incorrect'
 " Toggle SpellCheck
 map <Leader>sc :setlocal spell!<CR>
 
 " Shortcuts using <Leader>
-map <Leader>sn ]s
+map <C-n> ]s
 map <Leader>sb [s
 map <Leader>s? z=
 
+" gruvbox error fix, for getting spell check hightlitghting to work again
+let g:gruvbox_guisp_fallback = "bg"
+syntax enable
 " set local language
-nmap <Leader>ss :setlocal spell! spelllang=sv_se<CR>
-nmap <Leader>se :setlocal spell! spelllang=en_uk<CR>
+nmap <Leader>ss :setlocal spell! spelllang=sv<CR>
+nmap <Leader>se :setlocal spell! spelllang=en<CR>
 
 " FileExplorer Settings (nerdtree subsitute) ================================
 let g:newtrw_banner = 0
