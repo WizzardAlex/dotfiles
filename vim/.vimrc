@@ -1,5 +1,7 @@
 " Pulgin's  ====================================================================
 
+set nocompatible
+filetype plugin on
 
 " vim-plug auto-intsall
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -14,24 +16,27 @@ Plug 'vimwiki/vimwiki', { 'branch' : 'dev'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() },
       \ 'for': ['markdown', 'vim-plug']}
 
-" Vim Plugin for Lively Previewing LaTeX PDF Output
-"Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
-
 "TODO FIXA NERDTREE?
 
 Plug 'lervag/vimtex'
 Plug 'sirver/ultisnips'
 
-Plug 'ycm-core/YouCompleteMe'
+if (&ft != 'man' || &ft != 'manual') " funkar inte, får error vid manpages
+    Plug 'ycm-core/YouCompleteMe'
+endif
+
 Plug 'vim-syntastic/syntastic'
 Plug 'morhetz/gruvbox'
+
+"Zettlekasten
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'michal-h21/vim-zettel'
 
 call plug#end()
 
 " Settings ==================================================================
 
-set nocompatible
-filetype plugin on
 syntax on			" turn on syntax highlighting
 
 set hidden			" allows reuse the same window
@@ -170,9 +175,10 @@ let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 
-" LaTeX-Preview ============================================================
+" YouCompleteMe  ============================================================
 
-"let g:livepreview_use_biber=1
+let g:ycm_filetype_blacklist = { 'man': 1, 'markdown': 1 }
+let g:ycm_show_diagnostics_ui = 0       " Lets syntastic checkers run with YCM
 
 " Syntastic ================================================================
 
@@ -184,6 +190,11 @@ let g:syntastic_check_on_wq = 0
 au FileType tex let g:syntastic_auto_loc_list = 0
 au FileType tex let g:syntastic_check_on_open  = 0
 
-" YouCompleteMe  ============================================================
 
-let g:ycm_show_diagnostics_ui = 0       " Lets syntastic checkers run with YCM
+" Zettlekasten ==============================================================
+let g:nv_search_paths = ['~/Documents/notes']
+let g:nv_default_extension = '.md'
+
+
+" Alacritty mouse fix =======================================================
+set ttymouse=sgr

@@ -1,8 +1,8 @@
-ln -fs ~/dotfiles/bash/.bashrc          ~/.bashrc
-ln -fs ~/dotfiles/vim/.vimrc            ~/.vimrc
-ln -fs ~/dotfiles/git/.gitconfig        ~/.gitconfig
-ln -fs ~/dotfiles/awesome/rc.lua        ~/.config/awesome/rc.lua
-ln -fs ~/dotfiles/neofetch/config.conf  ~/.config/neofetch/config.conf
-
+ln -fs ~/dotfiles/bash/.bashrc                  ~/.bashrc
+ln -fs ~/dotfiles/vim/.vimrc                    ~/.vimrc
+ln -fs ~/dotfiles/git/.gitconfig                ~/.gitconfig
+ln -fs ~/dotfiles/awesome/rc.lua                ~/.config/awesome/rc.lua
+ln -fs ~/dotfiles/neofetch/config.conf          ~/.config/neofetch/config.conf
+ln -fs ~/dotfiles/alacritty/alacritty.yml       ~/.config/alacritty/alacritty.yml
 
 

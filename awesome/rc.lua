@@ -61,7 +61,7 @@ local modkey = "Mod4"
 local browser           = "firefox"
 local filemanager       = "ranger"
 local editor            = os.getenv("EDITOR") or "editor"
-local terminal          = os.getenv("TERMINAL") or "x-terminal-emulator"
+local terminal          = os.getenv("TERMINAL") or os.getenv("TERM")
 local editor_cmd        = terminal .. " -e " .. editor
 
 -- Themes define colours, icons, font and wallpapers.

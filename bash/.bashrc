@@ -1,5 +1,5 @@
 export EDITOR='vim'
-export TERM="xterm-256color"
+export TERM="x-terminal-emulator"
 export TERMINAL="x-terminal-emulator"
 
 # sets vim as manpager
@@ -131,3 +131,4 @@ fi
 clear
 neofetch
 
+source ~/.bash_completion/alacritty
