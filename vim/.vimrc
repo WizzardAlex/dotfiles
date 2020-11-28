@@ -18,12 +18,10 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() },
 
 "TODO FIXA NERDTREE?
 
-Plug 'lervag/vimtex'
+"Plug 'lervag/vimtex'
 Plug 'sirver/ultisnips'
 
-if (&ft != 'man' || &ft != 'manual') " funkar inte, får error vid manpages
-    Plug 'ycm-core/YouCompleteMe'
-endif
+Plug 'ycm-core/YouCompleteMe', { 'for': ['python','c','lua']}
 
 Plug 'vim-syntastic/syntastic'
 Plug 'morhetz/gruvbox'
@@ -31,7 +29,7 @@ Plug 'morhetz/gruvbox'
 "Zettlekasten
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'michal-h21/vim-zettel'
+"Plug 'michal-h21/vim-zettel'
 
 call plug#end()
 
@@ -46,6 +44,7 @@ set shiftwidth=4		" Number of autoindent spaces
 set smartindent
 set smarttab
 set breakindent			" indent line wraps
+set scrolloff=2                 " always show at least one line abo/below cursor
 
 set rnu				" set relative line number
 set nu
@@ -73,20 +72,18 @@ set ttyfast                     " speeds up scrolling
 
 set updatetime=100              " default 4000 ms = 4 s, is noticeable
 set cursorline                  " highlights the cursorline
-set t_Co=256			" for the colorscheme Zenburn
-"colors zenburn
+set t_Co=256			" for the colorschemes
+set wildmenu
 
 " removes white space at boot, for c and python files
 au FileType python,c au BufWritePre <buffer> %s/\s\+$//e
 
 " Theme  ====================================================================
-
 "colors zenburn
 colors gruvbox
 set background=dark
 
 " Keybindings ===============================================================
-
 set pastetoggle=<F2>		" toggle between 'paste' and 'nopaste'
 map <F8> :make <CR>
 au FileType c map <F9> :! ./%<  <CR>
@@ -95,7 +92,7 @@ au FileType python map <F9> :w <CR> :! python3 %  <CR>
 map Y y$			
 let mapleader = ","
 
-setlocal foldmethod=manual
+"setlocal foldmethod=manual
 
 " *** Spell Checking ***
 " zg = 'adds the selected word to the dictionary' , zw = 'marks words as incorrect'
@@ -143,16 +140,13 @@ let g:vimwiki_list = [{
 nmap <silent> <leader>wb :Vimwiki2HTMLBrowse<CR>
 
 " Powerline =================================================================
-
 python3 from powerline.vim import setup as powerline_setup
 python3 powerline_setup()
 python3 del powerline_setup
 
 set laststatus=2
 
-
 " Markdown-Preview =========================================================
-
 let g:mkdp_browser = 'firefox'
 let g:mkdp_auto_close = 0
 let g:mkdp_preview_options = {
@@ -162,26 +156,26 @@ let g:mkdp_preview_options = {
 nmap <leader>p <Plug>MarkdownPreview
 
 " Vim-Tex ==================================================================
-
-let g:tex_flavor='latex'
-let g:vimtex_view_method='zathura'
-let g:vimtex_quickfix_mode=0
-set conceallevel=1
-let g:tex_conceal='abdmg'
+"let g:tex_flavor='latex'
+"let g:vimtex_view_method='zathura'
+"let g:vimtex_quickfix_mode=0
+"set conceallevel=1
+"let g:tex_conceal='abdmg'
 
 " Snippets =================================================================
-
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 
 " YouCompleteMe  ============================================================
 
-let g:ycm_filetype_blacklist = { 'man': 1, 'markdown': 1 }
+let g:ycm_filetype_blacklist = { 'man': 1, 
+                                \ 'manpage':1,
+                                \ 'markdown': 1, 
+                                \ 'vimwiki': 1 }
 let g:ycm_show_diagnostics_ui = 0       " Lets syntastic checkers run with YCM
 
 " Syntastic ================================================================
-
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -190,11 +184,11 @@ let g:syntastic_check_on_wq = 0
 au FileType tex let g:syntastic_auto_loc_list = 0
 au FileType tex let g:syntastic_check_on_open  = 0
 
-
 " Zettlekasten ==============================================================
 let g:nv_search_paths = ['~/Documents/notes']
 let g:nv_default_extension = '.md'
-
+let g:zettel_format = "%title-%H%M-%d%m%y"
+let g:zettel_link_format = "[%title](%link)"
 
 " Alacritty mouse fix =======================================================
 set ttymouse=sgr
