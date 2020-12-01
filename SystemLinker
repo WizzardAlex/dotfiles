@@ -4,5 +4,8 @@ ln -fs ~/dotfiles/git/.gitconfig                ~/.gitconfig
 ln -fs ~/dotfiles/awesome/rc.lua                ~/.config/awesome/rc.lua
 ln -fs ~/dotfiles/neofetch/config.conf          ~/.config/neofetch/config.conf
 ln -fs ~/dotfiles/alacritty/alacritty.yml       ~/.config/alacritty/alacritty.yml
+ln -fs ~/dotfiles/ctags.d/md.ctags              ~/.ctags.d/md.ctags
+ln -fs ~/dotfiles/fish/config.fish              ~/.config/fish/conf.d/config.fish
+ln -fs ~/dotfiles/fish/fish_prompt.fish         ~/.config/fish/conf.d/fish_prompt.fish
 
 

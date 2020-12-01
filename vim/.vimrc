@@ -2,6 +2,9 @@
 
 set nocompatible
 filetype plugin on
+" gruvbox error fix, for getting spell check hightlitghting to work again
+let g:gruvbox_guisp_fallback = "bg"
+syntax enable
 
 " vim-plug auto-intsall
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -27,7 +30,7 @@ Plug 'vim-syntastic/syntastic'
 Plug 'morhetz/gruvbox'
 
 "Zettlekasten
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', {'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 "Plug 'michal-h21/vim-zettel'
 
@@ -58,11 +61,9 @@ set incsearch			" highlight when typing
 set ignorecase			" case insensitive searching
 set linebreak			" break on word boundaries
 
-set nobackup			" no backup files
 set noswapfile			" no swap files
 set smartcase			" only use case sensitive search when uppercase
 set showmatch			" show matching brackets
-set scrolloff=4			" lines off to keep of the edge of the screen
 set history=1000
 set undolevels=1000
 set visualbell			
@@ -74,6 +75,9 @@ set updatetime=100              " default 4000 ms = 4 s, is noticeable
 set cursorline                  " highlights the cursorline
 set t_Co=256			" for the colorschemes
 set wildmenu
+set mouse=a                     " Enable mouse for scrolling and resizing
+
+set confirm                     " Confirm when closing an unsaved file
 
 " removes white space at boot, for c and python files
 au FileType python,c au BufWritePre <buffer> %s/\s\+$//e
@@ -89,10 +93,17 @@ map <F8> :make <CR>
 au FileType c map <F9> :! ./%<  <CR>
 au FileType python map <F9> :w <CR> :! python3 %  <CR>
 				" acts like 'D' and 'C' instead of 'yy'
-map Y y$			
+map Y y$
 let mapleader = ","
 
 "setlocal foldmethod=manual
+
+" ** ctags **
+set tags+=./tags;,tags
+" Generates ctags silently
+nnoremap <Leader>tt :silent !ctags -R ~/Documents/notes/ <CR> :redraw! <CR>
+" Go to index of notes and set working directory to my notes
+nnoremap <leader>ni :e $NOTES_DIR/index.md<CR>:cd $NOTES_DIR<CR>
 
 " *** Spell Checking ***
 " zg = 'adds the selected word to the dictionary' , zw = 'marks words as incorrect'
@@ -104,9 +115,7 @@ map <C-n> ]s
 map <Leader>sb [s
 map <Leader>s? z=
 
-" gruvbox error fix, for getting spell check hightlitghting to work again
-let g:gruvbox_guisp_fallback = "bg"
-syntax enable
+
 " set local language
 nmap <Leader>ss :setlocal spell! spelllang=sv<CR>
 nmap <Leader>se :setlocal spell! spelllang=en<CR>
@@ -126,15 +135,15 @@ let g:vimwiki_list = [{
   \ 'path': '~/Documents/notes/', 
   \ 'path_html': '~/Documents/notes/_site/',
   \ 'template_path': '~/Documents/notes/_site/templates/',
-  \ 'custom_wiki2html': '~/Documents/notes/wiki2html.sh',
   \ 'template_default': 'markdown',
+  \ 'custom_wiki2html': '~/Documents/notes/wiki2html.sh',
   \ 'template_ext': '.html',
   \ 'syntax' :'markdown', 
   \ 'ext': '.md' 
   \ }]
 
 "au FileType markdown set ft=markdown
-"au FileType vimwiki set colorcolumn=0
+nnoremap <C-Space> :VimwikiToggleListItem<CR>
 
 " Transform to html keyBindings
 nmap <silent> <leader>wb :Vimwiki2HTMLBrowse<CR>
@@ -185,10 +194,10 @@ au FileType tex let g:syntastic_auto_loc_list = 0
 au FileType tex let g:syntastic_check_on_open  = 0
 
 " Zettlekasten ==============================================================
-let g:nv_search_paths = ['~/Documents/notes']
-let g:nv_default_extension = '.md'
-let g:zettel_format = "%title-%H%M-%d%m%y"
-let g:zettel_link_format = "[%title](%link)"
+" let g:nv_search_paths = ['~/Documents/notes']
+" let g:nv_default_extension = '.md'
+" let g:zettel_format = "%title-%H%M-%d%m%y"
+" let g:zettel_link_format = "[%title](%link)"
 
 " Alacritty mouse fix =======================================================
 set ttymouse=sgr

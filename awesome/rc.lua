@@ -419,8 +419,8 @@ globalkeys = gears.table.join(
               {description = "Brightness -10%", group = "hotkeys"}),
 
     -- TODO:Sleep
-    awful.key({ }, "XF86Sleep", function () os.execute("systemctl suspend") end,
-              {description = "System Sleep", group = "hotkeys"}),
+    awful.key({ }, "XF86Sleep", function () os.execute("i3lock") end,
+              {description = "System Lock", group = "hotkeys"}),
 
     -- TODO: LogOut, också implementera automatisk utloggning
 
@@ -438,10 +438,13 @@ globalkeys = gears.table.join(
                                     end
                                 end
                                 end,
-               {description = "Toggles touchpad On/Off", group = "hotkeys"})
+               {description = "Toggles touchpad On/Off", group = "hotkeys"}),
 
 
-
+    awful.key({ modkey,          },  "z", function()
+        os.execute("i3lock -f -i ~/Pictures/Wallpapers/mr-robot.png") end,
+              {description = "Lock Computer", group = "hotkeys"}) 
+---f -i ~/Pictures/Wallpapers/cyber-city-purple.jpg"
 )
 
 clientkeys = gears.table.join(
@@ -687,7 +690,10 @@ autorunApps =
     "nitrogen --restore",
     "bash dotfiles/scripts/swap-caps_lock-escape.sh",
     "redshift-gtk",
-    "xinput disable 14"
+    "xinput disable 14",
+    "tty-clock",
+    "htop",
+    "ranger"
 
 }
 if autorun then

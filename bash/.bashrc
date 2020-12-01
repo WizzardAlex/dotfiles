@@ -1,6 +1,7 @@
 export EDITOR='vim'
 export TERM="x-terminal-emulator"
 export TERMINAL="x-terminal-emulator"
+export NOTES_DIR="~/Documents/notes/"
 
 # sets vim as manpager
 export MANPAGER="/bin/sh -c \"col -b | vim --not-a-term -c 'set ft=man ts=8 nomod nolist noma' -\""
