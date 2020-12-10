@@ -18,9 +18,18 @@ local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
 
+
+-- ==== StreetTurtle Awesome widgets ====
 -- Battery Widget
 local batteryarc_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
+-- Volumearc Widget
+local volumearc_widget = require("awesome-wm-widgets.volumearc-widget.volumearc")
+-- Cpu Widget
+local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
 
+-- Spotify Widget
+local spotify_widget = require("awesome-wm-widgets.spotify-widget.spotify")
+-- =======================================
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -241,9 +250,27 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
+            spotify_widget({
+                play_icon = '/usr/share/icons/Papirus-Light/24x24/categories/spotify.svg',
+                pause_icon = '/usr/share/icons/Papirus-Dark/24x24/panel/spotify-indicator.svg',
+                dim_when_paused = true,
+                dim_opasity = 0.5,
+                show_tooltip = false
+            }),
             mykeyboardlayout,
+            cpu_widget({
+                enable_kill_button = true
+            }),
             wibox.widget.systray(),
             mytextclock,
+            volumearc_widget({
+                thickness = 3,
+                mute_color = '#000000',
+                button_press = function(_, _, _, button) --overwrites button press behaviour to open pavucontrol when clicked
+                    if (button == 1) then awful.spawn('pavucontrol --tab=3', false)
+                    end
+                end
+            }),
             batteryarc_widget({
                 show_current_level = true,
                 arc_thickness = 3,
@@ -685,15 +712,11 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 local autorun = true
 autorunApps =
 {
-    -- "psensor", hitta deamon alternativ???
     "bash dotfiles/scripts/.screenlayout/home.sh",
     "nitrogen --restore",
     "bash dotfiles/scripts/swap-caps_lock-escape.sh",
     "redshift-gtk",
-    "xinput disable 14",
-    "tty-clock",
-    "htop",
-    "ranger"
+    "xinput disable 14"
 
 }
 if autorun then

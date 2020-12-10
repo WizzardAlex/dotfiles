@@ -4,6 +4,7 @@ set nocompatible
 filetype plugin on
 " gruvbox error fix, for getting spell check hightlitghting to work again
 let g:gruvbox_guisp_fallback = "bg"
+syntax on			" turn on syntax highlighting
 syntax enable
 
 " vim-plug auto-intsall
@@ -19,12 +20,9 @@ Plug 'vimwiki/vimwiki', { 'branch' : 'dev'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() },
       \ 'for': ['markdown', 'vim-plug']}
 
-"TODO FIXA NERDTREE?
-
-"Plug 'lervag/vimtex'
 Plug 'sirver/ultisnips'
 
-Plug 'ycm-core/YouCompleteMe', { 'for': ['python','c','lua']}
+Plug 'ycm-core/YouCompleteMe', { 'for': ['python','c','lua','vim', 'unix']}
 
 Plug 'vim-syntastic/syntastic'
 Plug 'morhetz/gruvbox'
@@ -32,13 +30,12 @@ Plug 'morhetz/gruvbox'
 "Zettlekasten
 Plug 'junegunn/fzf', {'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-"Plug 'michal-h21/vim-zettel'
+Plug 'michal-h21/vim-zettel'
 
 call plug#end()
 
 " Settings ==================================================================
 
-syntax on			" turn on syntax highlighting
 
 set hidden			" allows reuse the same window
 set encoding=utf-8		" set encoding
@@ -101,7 +98,7 @@ let mapleader = ","
 " ** ctags **
 set tags+=./tags;,tags
 " Generates ctags silently
-nnoremap <Leader>tt :silent !ctags -R ~/Documents/notes/ <CR> :redraw! <CR>
+nnoremap <Leader>tt :silent !ctags -R ~/Documents/notes/ <CR>:redraw!<CR>
 " Go to index of notes and set working directory to my notes
 nnoremap <leader>ni :e $NOTES_DIR/index.md<CR>:cd $NOTES_DIR<CR>
 
@@ -129,24 +126,48 @@ let g:newtrw_sort_options = 'i'
 nmap <Leader>e :Lexplore<CR>
 
 " VimWiki ===================================================================
+let my_wiki = {}
+let my_wiki.path = '~/Documents/notes/' 
+let my_wiki.syntax = 'markdown'
+let my_wiki.ext = '.md'
+let my_wiki.automatic_nested_syntaxes = 1
+
+let my_zettelkasten = {}
+let my_zettelkasten.path = '~/Documents/notes/zettelkasten/'
+let my_zettelkasten.syntax = 'markdown'
+let my_zettelkasten.ext = '.md'
+let my_zettelkasten.automatic_nested_syntaxes = 1
+let my_zettelkasten.auto_tags = 1
+let my_zettelkasten.auto_toc = 1
+
+let g:vimwiki_list = [ my_wiki, my_zettelkasten]
+
+
+"work in-progress for website setup in vimwiki_list
+"  \ 'path_html': '~/Documents/notes/_site/',
+"  \ 'template_path': '~/Documents/notes/_site/templates/',
+"  \ 'template_default': 'markdown',
+"  \ 'custom_wiki2html': '~/Documents/notes/wiki2html.sh',
+"  \ 'template_ext': '.html',
 "  \ 'auto_export': 1, inställning som sparar ändringar i _site
-let g:vimwiki_list = [{ 
-  \ 'automatic_nested_syntaxes': 1,
-  \ 'path': '~/Documents/notes/', 
-  \ 'path_html': '~/Documents/notes/_site/',
-  \ 'template_path': '~/Documents/notes/_site/templates/',
-  \ 'template_default': 'markdown',
-  \ 'custom_wiki2html': '~/Documents/notes/wiki2html.sh',
-  \ 'template_ext': '.html',
-  \ 'syntax' :'markdown', 
-  \ 'ext': '.md' 
-  \ }]
 
 "au FileType markdown set ft=markdown
-nnoremap <C-Space> :VimwikiToggleListItem<CR>
-
+nnoremap <Leader><Space> :VimwikiToggleListItem<CR>
 " Transform to html keyBindings
 nmap <silent> <leader>wb :Vimwiki2HTMLBrowse<CR>
+
+" *** Zettlekasten ***
+let g:nv_search_paths = ['~/Documents/notes/zettelkasten/']
+let g:nv_default_extension = '.md'
+let g:zettel_format = "%title-%d%m%y-%H%M"
+let g:zettel_date_format = '%d-%m/%Y'
+let g:zettel_link_format = "[%title](%link)"
+let g:zettel_backlinks_title = "Backlinks"
+
+let g:zettel_options = [{}, 
+            \ {
+            \ "template" : "~/dotfiles/vim/zettel/zettel_template.tpl"
+            \ }]
 
 " Powerline =================================================================
 python3 from powerline.vim import setup as powerline_setup
@@ -164,24 +185,12 @@ let g:mkdp_preview_options = {
 
 nmap <leader>p <Plug>MarkdownPreview
 
-" Vim-Tex ==================================================================
-"let g:tex_flavor='latex'
-"let g:vimtex_view_method='zathura'
-"let g:vimtex_quickfix_mode=0
-"set conceallevel=1
-"let g:tex_conceal='abdmg'
-
 " Snippets =================================================================
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 
 " YouCompleteMe  ============================================================
-
-let g:ycm_filetype_blacklist = { 'man': 1, 
-                                \ 'manpage':1,
-                                \ 'markdown': 1, 
-                                \ 'vimwiki': 1 }
 let g:ycm_show_diagnostics_ui = 0       " Lets syntastic checkers run with YCM
 
 " Syntastic ================================================================
@@ -192,12 +201,6 @@ let g:syntastic_check_on_wq = 0
 
 au FileType tex let g:syntastic_auto_loc_list = 0
 au FileType tex let g:syntastic_check_on_open  = 0
-
-" Zettlekasten ==============================================================
-" let g:nv_search_paths = ['~/Documents/notes']
-" let g:nv_default_extension = '.md'
-" let g:zettel_format = "%title-%H%M-%d%m%y"
-" let g:zettel_link_format = "[%title](%link)"
 
 " Alacritty mouse fix =======================================================
 set ttymouse=sgr
