@@ -469,7 +469,7 @@ globalkeys = gears.table.join(
 
 
     awful.key({ modkey,          },  "z", function()
-        os.execute("i3lock -f -i ~/Pictures/Wallpapers/mr-robot.png") end,
+        os.execute("i3lock -f -c 000000") end,
               {description = "Lock Computer", group = "hotkeys"}) 
 ---f -i ~/Pictures/Wallpapers/cyber-city-purple.jpg"
 )

@@ -32,6 +32,8 @@ Plug 'junegunn/fzf', {'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'michal-h21/vim-zettel'
 
+Plug 'tpope/vim-surround'
+
 call plug#end()
 
 " Settings ==================================================================
@@ -85,8 +87,11 @@ colors gruvbox
 set background=dark
 
 " Keybindings ===============================================================
+nnoremap <silent><A-down> :move +1<CR>
+nnoremap <silent><A-up> :move -2<CR>
+
 set pastetoggle=<F2>		" toggle between 'paste' and 'nopaste'
-map <F8> :make <CR>
+map <F8> : pandoc % -o %<.pdf<CR>
 au FileType c map <F9> :! ./%<  <CR>
 au FileType python map <F9> :w <CR> :! python3 %  <CR>
 				" acts like 'D' and 'C' instead of 'yy'
@@ -140,7 +145,15 @@ let my_zettelkasten.automatic_nested_syntaxes = 1
 let my_zettelkasten.auto_tags = 1
 let my_zettelkasten.auto_toc = 1
 
-let g:vimwiki_list = [ my_wiki, my_zettelkasten]
+let exjobb = {}
+let exjobb.path = '~/ExtraSpace/study/DVGC25/repository/BSc-project/alex-notes/theory/'
+let exjobb.syntax = 'markdown'
+let exjobb.ext = '.md'
+let exjobb.automatic_nested_syntaxes = 1
+let exjobb.auto_tags = 1
+let exjobb.auto_toc = 1
+
+let g:vimwiki_list = [ my_wiki, my_zettelkasten, exjobb]
 
 
 "work in-progress for website setup in vimwiki_list
@@ -155,7 +168,7 @@ let g:vimwiki_list = [ my_wiki, my_zettelkasten]
 nnoremap <Leader><Space> :VimwikiToggleListItem<CR>
 " Transform to html keyBindings
 nmap <silent> <leader>wb :Vimwiki2HTMLBrowse<CR>
-
+nnoremap <Leader>n gg5dd :w<cr>6j
 " *** Zettlekasten ***
 let g:nv_search_paths = ['~/Documents/notes/zettelkasten/']
 let g:nv_default_extension = '.md'
@@ -164,10 +177,10 @@ let g:zettel_date_format = '%d-%m/%Y'
 let g:zettel_link_format = "[%title](%link)"
 let g:zettel_backlinks_title = "Backlinks"
 
+let g:vimwiki_markdown_link_ext = 1
 let g:zettel_options = [{}, 
-            \ {
-            \ "template" : "~/dotfiles/vim/zettel/zettel_template.tpl"
-            \ }]
+            \ { "template" : "~/dotfiles/vim/zettel/zettel_template.tpl" },
+            \ { "template" : "~/dotfiles/vim/zettel/zettel_template.tpl" }]
 
 " Powerline =================================================================
 python3 from powerline.vim import setup as powerline_setup
