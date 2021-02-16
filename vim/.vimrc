@@ -20,9 +20,10 @@ Plug 'vimwiki/vimwiki', { 'branch' : 'dev'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() },
       \ 'for': ['markdown', 'vim-plug']}
 
+Plug 'lervag/vimtex'
 Plug 'sirver/ultisnips'
 
-Plug 'ycm-core/YouCompleteMe', { 'for': ['python','c','lua','vim', 'unix']}
+"Plug 'ycm-core/YouCompleteMe', { 'for': ['python','c','lua','vim', 'unix']}
 
 Plug 'vim-syntastic/syntastic'
 Plug 'morhetz/gruvbox'
@@ -79,7 +80,7 @@ set mouse=a                     " Enable mouse for scrolling and resizing
 set confirm                     " Confirm when closing an unsaved file
 
 " removes white space at boot, for c and python files
-au FileType python,c au BufWritePre <buffer> %s/\s\+$//e
+"au FileType python,c au BufWritePre <buffer> %s/\s\+$//e
 
 " Theme  ====================================================================
 "colors zenburn
@@ -94,7 +95,7 @@ set pastetoggle=<F2>		" toggle between 'paste' and 'nopaste'
 map <F8> : pandoc % -o %<.pdf<CR>
 au FileType c map <F9> :! ./%<  <CR>
 au FileType python map <F9> :w <CR> :! python3 %  <CR>
-				" acts like 'D' and 'C' instead of 'yy'
+" acts like 'D' and 'C' instead of 'yy'
 map Y y$
 let mapleader = ","
 
@@ -111,13 +112,10 @@ nnoremap <leader>ni :e $NOTES_DIR/index.md<CR>:cd $NOTES_DIR<CR>
 " zg = 'adds the selected word to the dictionary' , zw = 'marks words as incorrect'
 " Toggle SpellCheck
 map <Leader>sc :setlocal spell!<CR>
-
 " Shortcuts using <Leader>
 map <C-n> ]s
 map <Leader>sb [s
 map <Leader>s? z=
-
-
 " set local language
 nmap <Leader>ss :setlocal spell! spelllang=sv<CR>
 nmap <Leader>se :setlocal spell! spelllang=en<CR>
@@ -155,20 +153,11 @@ let exjobb.auto_toc = 1
 
 let g:vimwiki_list = [ my_wiki, my_zettelkasten, exjobb]
 
-
-"work in-progress for website setup in vimwiki_list
-"  \ 'path_html': '~/Documents/notes/_site/',
-"  \ 'template_path': '~/Documents/notes/_site/templates/',
-"  \ 'template_default': 'markdown',
-"  \ 'custom_wiki2html': '~/Documents/notes/wiki2html.sh',
-"  \ 'template_ext': '.html',
-"  \ 'auto_export': 1, inställning som sparar ändringar i _site
-
-"au FileType markdown set ft=markdown
 nnoremap <Leader><Space> :VimwikiToggleListItem<CR>
 " Transform to html keyBindings
 nmap <silent> <leader>wb :Vimwiki2HTMLBrowse<CR>
 nnoremap <Leader>n gg5dd :w<cr>6j
+
 " *** Zettlekasten ***
 let g:nv_search_paths = ['~/Documents/notes/zettelkasten/']
 let g:nv_default_extension = '.md'
@@ -198,10 +187,14 @@ let g:mkdp_preview_options = {
 
 nmap <leader>p <Plug>MarkdownPreview
 
-" Snippets =================================================================
+" UltiSnips =================================================================
 let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsListSnippets = '<c-tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+let g:UltiSnipsEditSplit = 'vertical'
+let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit = '~/dotfiles/vim/UltiSnips/'
+let g:UltiSnipsSnippetDirectories=['~/dotfiles/vim/UltiSnips/']
 
 " YouCompleteMe  ============================================================
 let g:ycm_show_diagnostics_ui = 0       " Lets syntastic checkers run with YCM
@@ -215,5 +208,12 @@ let g:syntastic_check_on_wq = 0
 au FileType tex let g:syntastic_auto_loc_list = 0
 au FileType tex let g:syntastic_check_on_open  = 0
 
+" VimTex ====================================================================
+let g:tex_flavor='latex'
+let g:vimtex_view_method='zathura'
+let g:vimtex_quickfix_mode=0
+set conceallevel=1
+let g:tex_conceal='abdmg'
+    
 " Alacritty mouse fix =======================================================
 set ttymouse=sgr
