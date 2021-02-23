@@ -713,8 +713,8 @@ local autorun = true
 autorunApps =
 {
     "bash dotfiles/scripts/.screenlayout/home.sh",
-    "nitrogen --restore",
     "bash dotfiles/scripts/swap-caps_lock-escape.sh",
+    "nitrogen --restore",
     "redshift-gtk",
     "xinput disable 14"
 

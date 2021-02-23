@@ -23,7 +23,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() },
 Plug 'lervag/vimtex'
 Plug 'sirver/ultisnips'
 
-"Plug 'ycm-core/YouCompleteMe', { 'for': ['python','c','lua','vim', 'unix']}
+Plug 'ycm-core/YouCompleteMe' ", { 'for': ['python','c','lua','vim', 'unix']}
 
 Plug 'vim-syntastic/syntastic'
 Plug 'morhetz/gruvbox'
@@ -38,7 +38,6 @@ Plug 'tpope/vim-surround'
 call plug#end()
 
 " Settings ==================================================================
-
 
 set hidden			" allows reuse the same window
 set encoding=utf-8		" set encoding
@@ -82,24 +81,46 @@ set confirm                     " Confirm when closing an unsaved file
 " removes white space at boot, for c and python files
 "au FileType python,c au BufWritePre <buffer> %s/\s\+$//e
 
+" Functions =================================================================
+
+function! NetrwMapping()
+    nmap <buffer> H u                           
+    nmap <buffer> h -^                          
+    nmap <buffer> l <CR>                        
+
+    nmap <buffer> . gh                          
+    nmap <buffer> P <C-w>z                      
+
+    nmap <buffer> L <CR>:Lexplore<CR>           
+    nmap <buffer> <Leader>e :Lexplore<CR>      
+endfunction
+
+
 " Theme  ====================================================================
 "colors zenburn
 colors gruvbox
 set background=dark
 
 " Keybindings ===============================================================
-nnoremap <silent><A-down> :move +1<CR>
-nnoremap <silent><A-up> :move -2<CR>
+
+let mapleader = ","
+" Move lines
+nnoremap <M-Down> :m .+1<CR>==
+nnoremap <M-Up> :m .-2<CR>==
+vnoremap <M-Down> :m '>+1<CR>gv=gv
+vnoremap <M-Up> :m '<-2<CR>gv=gv
 
 set pastetoggle=<F2>		" toggle between 'paste' and 'nopaste'
-map <F8> : pandoc % -o %<.pdf<CR>
+nnoremap <F5> :w<CR>
+nmap <F8> : pandoc % -o %<.pdf<CR>
 au FileType c map <F9> :! ./%<  <CR>
 au FileType python map <F9> :w <CR> :! python3 %  <CR>
-" acts like 'D' and 'C' instead of 'yy'
-map Y y$
-let mapleader = ","
 
-"setlocal foldmethod=manual
+nmap Y y$                        " acts like 'D' and 'C' instead of 'yy'
+
+source ~/dotfiles/vim/vcomments.vim
+map <Leader>c :call Comment()<CR>
+map <Leader>C :call Uncomment()<CR>
 
 " ** ctags **
 set tags+=./tags;,tags
@@ -114,19 +135,29 @@ nnoremap <leader>ni :e $NOTES_DIR/index.md<CR>:cd $NOTES_DIR<CR>
 map <Leader>sc :setlocal spell!<CR>
 " Shortcuts using <Leader>
 map <C-n> ]s
-map <Leader>sb [s
+map <C-p> [s
 map <Leader>s? z=
 " set local language
 nmap <Leader>ss :setlocal spell! spelllang=sv<CR>
 nmap <Leader>se :setlocal spell! spelllang=en<CR>
+nmap <Leader>sb :setlocal spell! spelllang=en,sv<CR>
+inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 
-" FileExplorer Settings (nerdtree subsitute) ================================
-let g:newtrw_banner = 0
-let g:newtrw_keepdir = 0 
-let g:newtrw_liststyle = 1" or 3
-let g:newtrw_sort_options = 'i'
+" FileExplorer Settings (netrw) ================================
+let g:netrw_winsize = 30
+let g:netrw_banner = 0
+let g:netrw_keepdir = 0 
+let g:netrw_liststyle = 1" or 3
+let g:netrw_sort_options = 'i'
+let g:netrw_localcopydircmd = 'cp -r'
+let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+'
 
-nmap <Leader>e :Lexplore<CR>
+nmap <Leader>e :Lexplore %:p:h<CR>
+
+augroup netrw_mapping
+    autocmd!
+    autocmd filetype netrw call NetrwMapping()
+augroup END
 
 " VimWiki ===================================================================
 let my_wiki = {}
@@ -156,7 +187,7 @@ let g:vimwiki_list = [ my_wiki, my_zettelkasten, exjobb]
 nnoremap <Leader><Space> :VimwikiToggleListItem<CR>
 " Transform to html keyBindings
 nmap <silent> <leader>wb :Vimwiki2HTMLBrowse<CR>
-nnoremap <Leader>n gg5dd :w<cr>6j
+au FileType markdown nnoremap <Leader>n gg5dd6j
 
 " *** Zettlekasten ***
 let g:nv_search_paths = ['~/Documents/notes/zettelkasten/']
@@ -198,6 +229,15 @@ let g:UltiSnipsSnippetDirectories=['~/dotfiles/vim/UltiSnips/']
 
 " YouCompleteMe  ============================================================
 let g:ycm_show_diagnostics_ui = 0       " Lets syntastic checkers run with YCM
+let g:ycm_filetype_blacklist = {
+                                \ 'tagbar': 1,
+                                \ 'notes': 1,
+                                \ 'markdown': 1,
+                                \ 'netrw': 1,
+                                \ 'text': 1,
+                                \ 'vimwiki': 1,
+                                \}
+nmap <leader>D <plug>(YCMHover)
 
 " Syntastic ================================================================
 let g:syntastic_always_populate_loc_list = 1
@@ -208,12 +248,13 @@ let g:syntastic_check_on_wq = 0
 au FileType tex let g:syntastic_auto_loc_list = 0
 au FileType tex let g:syntastic_check_on_open  = 0
 
-" VimTex ====================================================================
+" VimTex (latex plugin)======================================================
 let g:tex_flavor='latex'
 let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=0
 set conceallevel=1
 let g:tex_conceal='abdmg'
+au FileType tex nnoremap <silent> <F9> :w <CR> :.! pdflatex %  <CR>
     
 " Alacritty mouse fix =======================================================
 set ttymouse=sgr
