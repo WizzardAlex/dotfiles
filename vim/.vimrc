@@ -52,7 +52,7 @@ set rnu				" set relative line number
 set nu
 set ruler			" Show row and column info
 set autoread			" auto read files changed outside vim	
-set clipboard=unnamedplus	" use the system clipboard
+set clipboard=unnamedplus	" use the system clipboard paste into vim
 set colorcolumn=81		" highlight max column length
 set expandtab			" tabs to spaces
 set hlsearch			" highlight search query
@@ -78,10 +78,22 @@ set mouse=a                     " Enable mouse for scrolling and resizing
 
 set confirm                     " Confirm when closing an unsaved file
 
+" Python PEP indentation 
+au  FileType python call PythonVimSettings()
+
 " removes white space at boot, for c and python files
 "au FileType python,c au BufWritePre <buffer> %s/\s\+$//e
 
 " Functions =================================================================
+function! PythonVimSettings()
+    set tabstop=4
+    set shiftwidth=4
+    set textwidth=79
+    set colorcolumn=79
+    set expandtab
+    set autoindent
+    let python_highlight_all=1
+endfunction
 
 function! NetrwMapping()
     nmap <buffer> H u                           
@@ -133,7 +145,6 @@ nnoremap <leader>ni :e $NOTES_DIR/index.md<CR>:cd $NOTES_DIR<CR>
 " zg = 'adds the selected word to the dictionary' , zw = 'marks words as incorrect'
 " Toggle SpellCheck
 map <Leader>sc :setlocal spell!<CR>
-" Shortcuts using <Leader>
 map <C-n> ]s
 map <C-p> [s
 map <Leader>s? z=
@@ -141,7 +152,7 @@ map <Leader>s? z=
 nmap <Leader>ss :setlocal spell! spelllang=sv<CR>
 nmap <Leader>se :setlocal spell! spelllang=en<CR>
 nmap <Leader>sb :setlocal spell! spelllang=en,sv<CR>
-inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
+inoremap <C-l> <C-g>u<Esc>[s1z=`]a<C-g>u
 
 " FileExplorer Settings (netrw) ================================
 let g:netrw_winsize = 30
@@ -202,10 +213,6 @@ let g:zettel_options = [{},
             \ { "template" : "~/dotfiles/vim/zettel/zettel_template.tpl" },
             \ { "template" : "~/dotfiles/vim/zettel/zettel_template.tpl" }]
 
-" Powerline =================================================================
-python3 from powerline.vim import setup as powerline_setup
-python3 powerline_setup()
-python3 del powerline_setup
 
 set laststatus=2
 
@@ -229,6 +236,8 @@ let g:UltiSnipsSnippetDirectories=['~/dotfiles/vim/UltiSnips/']
 
 " YouCompleteMe  ============================================================
 let g:ycm_show_diagnostics_ui = 0       " Lets syntastic checkers run with YCM
+let g:ycm_autoclose_preview_window_after_insertion = 1
+nmap <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:ycm_filetype_blacklist = {
                                 \ 'tagbar': 1,
                                 \ 'notes': 1,
@@ -240,13 +249,28 @@ let g:ycm_filetype_blacklist = {
 nmap <leader>D <plug>(YCMHover)
 
 " Syntastic ================================================================
+let g:syntastic_shell = "/bin/sh"
+ if globpath(&runtimepath, 'plugin/airline.vim', 1) ==# '' && globpath(&runtimepath, 'plugin/lightline.vim', 1) ==# '' 
+   set statusline+=%#warningmsg# 
+   set statusline+=%{SyntasticStatuslineFlag()} 
+   set statusline+=%* 
+ endif 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+let g:syntastic_python_checkers=["flake8"]
+let g:syntastic_python_flake8_args="--ignore=E501,W601"
+
 au FileType tex let g:syntastic_auto_loc_list = 0
 au FileType tex let g:syntastic_check_on_open  = 0
+
+" Powerline =================================================================
+python3 from powerline.vim import setup as powerline_setup
+python3 powerline_setup()
+python3 del powerline_setup
+
 
 " VimTex (latex plugin)======================================================
 let g:tex_flavor='latex'
