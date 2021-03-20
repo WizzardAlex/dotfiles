@@ -40,6 +40,10 @@ function fish_prompt
   end
 
   echo -n -s $initial_indicator $whitespace $cwd $git_info $whitespace $ahead $status_indicator $whitespace
+
+  if set -q VIRTUAL_ENV
+      echo -n -s (set_color blue) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
+  end
 end
 
 function _git_ahead
@@ -90,6 +94,8 @@ function fish_mode_prompt
   end
   set_color normal
 end
+
+if set -q VIRTUAL_ENV
+    echo -n -s (set_color -b blue white) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
+end
 ### END OF PROMPT ###
-
-
