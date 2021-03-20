@@ -11,4 +11,5 @@
 - zathura
 - tlp
 
+
 Run ./SystemLinker when installing on a new system
