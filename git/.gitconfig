@@ -16,3 +16,4 @@
 
 [branch]
     sort=-committerdate
+	autosetuprebase = always

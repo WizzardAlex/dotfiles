@@ -6,7 +6,6 @@ set TERM "xterm-256color"
 set EDITOR "vim"
 set NOTES_DIR "~/Documents/notes/"
 
-
 ### Aliases ###
 # Colorize grep output (good for log files)
 alias grep='grep --color=auto'

@@ -82,7 +82,7 @@ set confirm                     " Confirm when closing an unsaved file
 au  FileType python call PythonVimSettings()
 
 " removes white space at boot, for c and python files
-"au FileType python,c au BufWritePre <buffer> %s/\s\+$//e
+au FileType python,c au BufWritePre <buffer> %s/\s\+$//e
 
 " Functions =================================================================
 function! PythonVimSettings()
@@ -127,6 +127,7 @@ nnoremap <F5> :w<CR>
 nmap <F8> : pandoc % -o %<.pdf<CR>
 au FileType c map <F9> :! ./%<  <CR>
 au FileType python map <F9> :w <CR> :! python3 %  <CR>
+au FileType python map <F3> :w <CR> :! pytest -vv ../tests/test_%  <CR>
 
 nmap Y y$                        " acts like 'D' and 'C' instead of 'yy'
 
@@ -209,7 +210,7 @@ let g:zettel_link_format = "[%title](%link)"
 let g:zettel_backlinks_title = "Backlinks"
 
 let g:vimwiki_markdown_link_ext = 1
-let g:zettel_options = [{}, 
+let g:zettel_options = [{ "template" : "~/dotfiles/vim/zettel/zettel_template.tpl" }, 
             \ { "template" : "~/dotfiles/vim/zettel/zettel_template.tpl" },
             \ { "template" : "~/dotfiles/vim/zettel/zettel_template.tpl" }]
 
