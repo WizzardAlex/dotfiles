@@ -13,3 +13,4 @@
 
 
 Run ./SystemLinker when installing on a new system
+run `python3 -m pip install virtualfish`, then `vf install`
