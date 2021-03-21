@@ -45,6 +45,7 @@ function fish_prompt
       echo -n -s (set_color blue) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
   end
 end
+### END OF PROMPT ###
 
 function _git_ahead
   set -l commits (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null)
@@ -98,4 +99,3 @@ end
 if set -q VIRTUAL_ENV
     echo -n -s (set_color -b blue white) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
 end
-### END OF PROMPT ###

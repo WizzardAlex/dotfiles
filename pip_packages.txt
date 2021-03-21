@@ -1,0 +1,7 @@
+powerline-status==2.7
+isort
+black
+ipython
+radon
+flake8
+virtualfish
