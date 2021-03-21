@@ -35,6 +35,8 @@ Plug 'michal-h21/vim-zettel'
 
 Plug 'tpope/vim-surround'
 
+Plug 'tpope/vim-fugitive' 
+
 call plug#end()
 
 " Settings ==================================================================

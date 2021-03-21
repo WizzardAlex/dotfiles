@@ -1,2 +1,4 @@
 powerline-status
 flake8
+black
+isort
