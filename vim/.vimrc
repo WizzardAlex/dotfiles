@@ -37,6 +37,7 @@ Plug 'tpope/vim-surround'
 
 Plug 'tpope/vim-fugitive' 
 
+Plug 'jiangmiao/auto-pairs'
 call plug#end()
 
 " Settings ==================================================================
@@ -45,6 +46,8 @@ set hidden			" allows reuse the same window
 set encoding=utf-8		" set encoding
 set autoindent
 set shiftwidth=4		" Number of autoindent spaces
+au FileType markdown set shiftwidth=2
+au FileType vimwiki set shiftwidth=2
 set smartindent
 set smarttab
 set breakindent			" indent line wraps
@@ -60,10 +63,10 @@ set expandtab			" tabs to spaces
 set hlsearch			" highlight search query
 set incsearch			" highlight when typing
 set ignorecase			" case insensitive searching
+set smartcase			" only use case sensitive search when uppercase
 set linebreak			" break on word boundaries
 
 set noswapfile			" no swap files
-set smartcase			" only use case sensitive search when uppercase
 set showmatch			" show matching brackets
 set history=1000
 set undolevels=1000
@@ -240,6 +243,11 @@ let g:UltiSnipsSnippetDirectories=['~/dotfiles/vim/UltiSnips/']
 " YouCompleteMe  ============================================================
 let g:ycm_show_diagnostics_ui = 0       " Lets syntastic checkers run with YCM
 let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_enable_diagnostic_signs = 1           " Enable line highligting diagnostics
+let g:ycm_enable_diagnostic_signs = 1           " Display icons in Vim's gutter, error, warnings
+let g:ycm_enable_diagnostic_highlighting = 1    " Highlight regions of diagnostic text
+let g:ycm_echo_current_diagnostic = 1           " Echo line's diagnostic that cursor is on
 nmap <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:ycm_filetype_blacklist = {
                                 \ 'tagbar': 1,
@@ -276,12 +284,16 @@ python3 del powerline_setup
 
 
 " VimTex (latex plugin)======================================================
-let g:tex_flavor='latex'
+"let g:tex_flavor='latex'
 let g:vimtex_view_method='zathura'
-let g:vimtex_quickfix_mode=0
 set conceallevel=1
+
 let g:tex_conceal='abdmg'
-au FileType tex nnoremap <silent> <F9> :w <CR> :.! pdflatex %  <CR>
+
+au FileType tex nnoremap <silent> <F9> :w <CR> :! pdflatex %  <CR>
+
+let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_quickfix_mode=1
     
 " Alacritty mouse fix =======================================================
 set ttymouse=sgr

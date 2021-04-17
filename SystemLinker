@@ -7,5 +7,5 @@ ln -fs ~/dotfiles/alacritty/alacritty.yml       ~/.config/alacritty/alacritty.ym
 ln -fs ~/dotfiles/ctags.d/md.ctags              ~/.ctags.d/md.ctags
 ln -fs ~/dotfiles/fish/config.fish              ~/.config/fish/conf.d/config.fish
 ln -fs ~/dotfiles/fish/fish_prompt.fish         ~/.config/fish/conf.d/fish_prompt.fish
-
+ln -fs ~/dotfiles/zathura/zathurarc             ~/.config/zathura/zathurarc
 
