@@ -24,6 +24,11 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 local batteryarc_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
 -- Volumearc Widget
 local volumearc_widget = require("awesome-wm-widgets.volumearc-widget.volumearc")
+
+local GET_VOLUME_CMD = 'amixer -D pulse sget Master'
+local INC_VOLUME_CMD = 'amixer -q -D pulse sset Master 5%+'
+local DEC_VOLUME_CMD = 'amixer -q -D pulse sset Master 5%-'
+local TOG_VOLUME_CMD = 'amixer -q -D pulse sset Master toggle'
 -- Cpu Widget
 local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
 
@@ -83,7 +88,7 @@ awful.util.terminal = terminal
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.tile,
-    -- awful.layout.suit.tile.left,
+    awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
     -- awful.layout.suit.tile.top,
     -- awful.layout.suit.fair,
@@ -92,7 +97,7 @@ awful.layout.layouts = {
     -- awful.layout.suit.spiral.dwindle,
     -- awful.layout.suit.max,
     awful.layout.suit.max.fullscreen,
-    awful.layout.suit.floating,
+    --awful.layout.suit.floating,
     -- awful.layout.suit.magnifier,
     -- awful.layout.suit.corner.nw,
     -- awful.layout.suit.corner.ne,
@@ -207,7 +212,7 @@ awful.screen.connect_for_each_screen(function(s)
 
 
     -- Each screen has its own tag table.
-    awful.util.tagnames = {" 1:SYS ", " 2:WWW ", " 3:DOC ", " 4:CHAT ", " 5:MUS ", " 6:VID ", " 7:DEV ", " 8:MISC1 ", " 9:MISC2 "}
+    awful.util.tagnames = {"1:SYS", "2:WWW", "3:DOC", "4:CHAT", "5:MUS", "6:VID", "7:DEV", "8:MISC1", "9:MISC2"}
     awful.tag(awful.util.tagnames,s,awful.layout.layouts[1])
     
 
@@ -267,7 +272,10 @@ awful.screen.connect_for_each_screen(function(s)
                 thickness = 3,
                 mute_color = '#000000',
                 button_press = function(_, _, _, button) --overwrites button press behaviour to open pavucontrol when clicked
-                    if (button == 1) then awful.spawn('pavucontrol --tab=3', false)
+                    if (button == 1) then awful.spawn(TOG_VOLUME_CMD, false)
+                    elseif (button == 3) then awful.spawn("pavucontrol --tab=3", false)
+                    elseif (button == 4) then awful.spawn(INC_VOLUME_CMD, false)
+                    elseif (button == 5) then awful.spawn(DEC_VOLUME_CMD, false)
                     end
                 end
             }),
@@ -410,30 +418,37 @@ globalkeys = gears.table.join(
 -- Volume control
 ----TODO: some kind of ui when changing the volume
     -- increase volume
+
+    awful.key({ altkey }, ".", function() awful.spawn(INC_VOLUME_CMD, false) end,
+      {description = "Increases Volume", group = "hotkeys"}),
+
     awful.key({ }, "XF86AudioRaiseVolume",
         function ()
-            local raiseVolume = "amixer -q set Master 5%+"
-            os.execute(raiseVolume)
+            awful.spawn(INC_VOLUME_CMD, false)
             --os.execute(string.format("amixer -q set Master 1%+",beautiful.volume.channel))
             --beautiful.volume.update()
         end,
       {description = "Increases Volume", group = "hotkeys"}),
     
     -- decrease volume
+    awful.key({ altkey }, ",", function() awful.spawn(DEC_VOLUME_CMD, false) end,
+      {description = "Decreases Volume", group = "hotkeys"}),
+
     awful.key({ }, "XF86AudioLowerVolume",
         function ()
-            local lowerVolume = "amixer -q set Master 5%-"
-            os.execute(lowerVolume)
+            awful.spawn(DEC_VOLUME_CMD, false)
             --os.execute(string.format("amixer -q set Master 1%-", beautiful.volume.channel))
             --beautiful.volume.update()
         end,
       {description = "Decreases Volume", group = "hotkeys"}),
 
     -- mute volume
+    awful.key({ altkey }, "m", function() awful.spawn(TOG_VOLUME_CMD, false) end,
+      {description = "Mutes sound", group = "hotkeys"}),
+
     awful.key({ }, "XF86AudioMute",
         function ()
-            local muteVolume = "amixer -q set Master toggle"
-            os.execute(muteVolume)
+            awful.spawn(TOG_VOLUME_CMD, false)
             --os.execute(string.format("amixer -q set Master toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
             --beautiful.volume.update()
         end,
@@ -641,6 +656,8 @@ awful.rules.rules = {
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
+    { rule = { class = "spotify" },
+      properties = { screen = 1, tag = "5:MUS" } },
 }
 -- }}}
 

@@ -23,7 +23,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() },
 Plug 'lervag/vimtex'
 Plug 'sirver/ultisnips'
 
-Plug 'ycm-core/YouCompleteMe' ", { 'for': ['python','c','lua','vim', 'unix']}
+Plug 'ycm-core/YouCompleteMe' ", { 'for': ['python','c','lua','vim', 'unix','lisp']}
 
 Plug 'vim-syntastic/syntastic'
 Plug 'morhetz/gruvbox'
@@ -38,6 +38,10 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive' 
 
 Plug 'jiangmiao/auto-pairs'
+
+Plug 'vlime/vlime', {'rtp': 'vim/'}
+Plug 'luochen1990/rainbow'
+    
 call plug#end()
 
 " Settings ==================================================================
@@ -59,6 +63,8 @@ set ruler			" Show row and column info
 set autoread			" auto read files changed outside vim	
 set clipboard=unnamedplus	" use the system clipboard paste into vim
 set colorcolumn=81		" highlight max column length
+au BufRead *.lsp, set colorcolumn=0
+
 set expandtab			" tabs to spaces
 set hlsearch			" highlight search query
 set incsearch			" highlight when typing
@@ -95,7 +101,6 @@ function! PythonVimSettings()
     set shiftwidth=4
     set textwidth=79
     set colorcolumn=79
-    set expandtab
     set autoindent
     let python_highlight_all=1
 endfunction
@@ -133,7 +138,7 @@ nmap <F8> : pandoc % -o %<.pdf<CR>
 au FileType c map <F9> :! ./%<  <CR>
 au FileType python map <F9> :w <CR> :! python3 %  <CR>
 au FileType python map <F3> :w <CR> :! pytest -vv ../tests/test_%  <CR>
-
+inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 nmap Y y$                        " acts like 'D' and 'C' instead of 'yy'
 
 source ~/dotfiles/vim/vcomments.vim
@@ -150,14 +155,13 @@ nnoremap <leader>ni :e $NOTES_DIR/index.md<CR>:cd $NOTES_DIR<CR>
 " *** Spell Checking ***
 " zg = 'adds the selected word to the dictionary' , zw = 'marks words as incorrect'
 " Toggle SpellCheck
-map <Leader>sc :setlocal spell!<CR>
-map <C-n> ]s
-map <C-p> [s
-map <Leader>s? z=
+nnoremap <Leader>sc :setlocal spell!<CR>
+nnoremap <C-n> ]s
+nnoremap <C-p> [s
 " set local language
-nmap <Leader>ss :setlocal spell! spelllang=sv<CR>
-nmap <Leader>se :setlocal spell! spelllang=en<CR>
-nmap <Leader>sb :setlocal spell! spelllang=en,sv<CR>
+nnoremap <Leader>ss :setlocal spell! spelllang=sv<CR>
+nnoremap <Leader>se :setlocal spell! spelllang=en<CR>
+nnoremap <Leader>sb :setlocal spell! spelllang=en,sv<CR>
 inoremap <C-l> <C-g>u<Esc>[s1z=`]a<C-g>u
 
 " FileExplorer Settings (netrw) ================================
@@ -231,6 +235,23 @@ let g:mkdp_preview_options = {
 
 nmap <leader>p <Plug>MarkdownPreview
 
+" YouCompleteMe  ============================================================
+let g:ycm_show_diagnostics_ui = 0       " Lets syntastic checkers run with YCM
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_enable_diagnostic_signs = 1           " Enable line highligting diagnostics
+let g:ycm_enable_diagnostic_highlighting = 1    " Highlight regions of diagnostic text
+let g:ycm_echo_current_diagnostic = 1           " Echo line's diagnostic that cursor is on
+"nmap <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"let g:ycm_filetype_blacklist = {
+"                                \ 'tagbar': 1,
+"                                \ 'notes': 1,
+"                                \ 'markdown': 1,
+"                                \ 'netrw': 1,
+"                                \ 'text': 1,
+"                                \ 'vimwiki': 1,
+"                                \}
+
 " UltiSnips =================================================================
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsListSnippets = '<c-tab>'
@@ -239,25 +260,6 @@ let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit = '~/dotfiles/vim/UltiSnips/'
 let g:UltiSnipsSnippetDirectories=['~/dotfiles/vim/UltiSnips/']
-
-" YouCompleteMe  ============================================================
-let g:ycm_show_diagnostics_ui = 0       " Lets syntastic checkers run with YCM
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_enable_diagnostic_signs = 1           " Enable line highligting diagnostics
-let g:ycm_enable_diagnostic_signs = 1           " Display icons in Vim's gutter, error, warnings
-let g:ycm_enable_diagnostic_highlighting = 1    " Highlight regions of diagnostic text
-let g:ycm_echo_current_diagnostic = 1           " Echo line's diagnostic that cursor is on
-nmap <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
-let g:ycm_filetype_blacklist = {
-                                \ 'tagbar': 1,
-                                \ 'notes': 1,
-                                \ 'markdown': 1,
-                                \ 'netrw': 1,
-                                \ 'text': 1,
-                                \ 'vimwiki': 1,
-                                \}
-nmap <leader>D <plug>(YCMHover)
 
 " Syntastic ================================================================
 let g:syntastic_shell = "/bin/sh"
@@ -271,11 +273,15 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+
 let g:syntastic_python_checkers=["flake8"]
 let g:syntastic_python_flake8_args="--ignore=E501,W601"
 
 au FileType tex let g:syntastic_auto_loc_list = 0
 au FileType tex let g:syntastic_check_on_open  = 0
+nmap <leader>l :lclose<cr>
+nmap <leader>o :lopen<cr>
+nmap <leader>n :lnext<cr>
 
 " Powerline =================================================================
 python3 from powerline.vim import setup as powerline_setup
@@ -293,7 +299,45 @@ let g:tex_conceal='abdmg'
 au FileType tex nnoremap <silent> <F9> :w <CR> :! pdflatex %  <CR>
 
 let g:vimtex_quickfix_open_on_warning = 0
-let g:vimtex_quickfix_mode=1
+let g:vimtex_quickfix_mode=0
     
+" Rainbow ===================================================================
+au BufRead *.lsp, setlocal shiftwidth=2 softtabstop=2 expandtab
+
+let g:rainbow_conf = {
+\	'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
+\	'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+\	'guis': [''],
+\	'cterms': [''],
+\	'operators': '_,_',
+\	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+\	'separately': {
+\		'*': {},
+\		'markdown': {
+\			'parentheses_options': 'containedin=markdownCode contained', 
+\		},
+\		'lisp': {
+\			'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'], 
+\		},
+\		'haskell': {
+\			'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/\v\{\ze[^-]/ end=/}/ fold'], 
+\		},
+\		'vim': {
+\			'parentheses_options': 'containedin=vimFuncBody', 
+\		},
+\		'perl': {
+\			'syn_name_prefix': 'perlBlockFoldRainbow', 
+\		},
+\		'stylus': {
+\			'parentheses': ['start=/{/ end=/}/ fold contains=@colorableGroup'], 
+\		},
+\		'css': 0, 
+\	}
+\}
+
+" Auto-pairs ================================================================
+au FileType lisp let b:AutoPairs = AutoPairsDefine({}, ["'"])
+
 " Alacritty mouse fix =======================================================
 set ttymouse=sgr
+
