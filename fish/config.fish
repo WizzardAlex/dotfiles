@@ -5,7 +5,7 @@ set fish_greeting               # Supresses fish's intro message
 set TERM "xterm-256color"
 set EDITOR "vim"
 set NOTES_DIR "~/Documents/notes/"
-set -U VIRTUALFISH_HOME $HOME/dotfiles/python_venvs/
+set -U VIRTUALFISH_HOME $HOME//python_venvs/
 
 ### Aliases ###
 # Colorize grep output (good for log files)
