@@ -23,7 +23,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() },
 Plug 'lervag/vimtex'
 Plug 'sirver/ultisnips'
 
-Plug 'ycm-core/YouCompleteMe' ", { 'for': ['python','c','lua','vim', 'unix','lisp']}
+Plug 'ycm-core/YouCompleteMe' 
 
 Plug 'vim-syntastic/syntastic'
 Plug 'morhetz/gruvbox'
@@ -34,13 +34,13 @@ Plug 'junegunn/fzf.vim'
 Plug 'michal-h21/vim-zettel'
 
 Plug 'tpope/vim-surround'
-
 Plug 'tpope/vim-fugitive' 
 
 Plug 'jiangmiao/auto-pairs'
 
 Plug 'vlime/vlime', {'rtp': 'vim/'}
-Plug 'luochen1990/rainbow'
+
+Plug 'sillybun/vim-repl'
     
 call plug#end()
 
@@ -103,6 +103,10 @@ function! PythonVimSettings()
     set colorcolumn=79
     set autoindent
     let python_highlight_all=1
+    let g:repl_position = 3 " 0=bottom, 1 =op, 2=left, 3=right
+    nnoremap <F9> :w <CR> :! python3 %  <CR>
+    nnoremap <F3> :w <CR> :! pytest -vv ./tests/test_%  <CR>
+    nnoremap <Leader>r :REPLToggle<CR>      
 endfunction
 
 function! NetrwMapping()
@@ -136,8 +140,6 @@ set pastetoggle=<F2>		" toggle between 'paste' and 'nopaste'
 nnoremap <F5> :w<CR>
 nmap <F8> : pandoc % -o %<.pdf<CR>
 au FileType c map <F9> :! ./%<  <CR>
-au FileType python map <F9> :w <CR> :! python3 %  <CR>
-au FileType python map <F3> :w <CR> :! pytest -vv ../tests/test_%  <CR>
 inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 nmap Y y$                        " acts like 'D' and 'C' instead of 'yy'
 
@@ -242,7 +244,6 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_enable_diagnostic_signs = 1           " Enable line highligting diagnostics
 let g:ycm_enable_diagnostic_highlighting = 1    " Highlight regions of diagnostic text
 let g:ycm_echo_current_diagnostic = 1           " Echo line's diagnostic that cursor is on
-"nmap <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 "let g:ycm_filetype_blacklist = {
 "                                \ 'tagbar': 1,
 "                                \ 'notes': 1,
@@ -300,40 +301,6 @@ au FileType tex nnoremap <silent> <F9> :w <CR> :! pdflatex %  <CR>
 
 let g:vimtex_quickfix_open_on_warning = 0
 let g:vimtex_quickfix_mode=0
-    
-" Rainbow ===================================================================
-au BufRead *.lsp, setlocal shiftwidth=2 softtabstop=2 expandtab
-
-let g:rainbow_conf = {
-\	'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
-\	'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
-\	'guis': [''],
-\	'cterms': [''],
-\	'operators': '_,_',
-\	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-\	'separately': {
-\		'*': {},
-\		'markdown': {
-\			'parentheses_options': 'containedin=markdownCode contained', 
-\		},
-\		'lisp': {
-\			'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'], 
-\		},
-\		'haskell': {
-\			'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/\v\{\ze[^-]/ end=/}/ fold'], 
-\		},
-\		'vim': {
-\			'parentheses_options': 'containedin=vimFuncBody', 
-\		},
-\		'perl': {
-\			'syn_name_prefix': 'perlBlockFoldRainbow', 
-\		},
-\		'stylus': {
-\			'parentheses': ['start=/{/ end=/}/ fold contains=@colorableGroup'], 
-\		},
-\		'css': 0, 
-\	}
-\}
 
 " Auto-pairs ================================================================
 au FileType lisp let b:AutoPairs = AutoPairsDefine({}, ["'"])
